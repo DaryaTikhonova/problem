@@ -1,0 +1,78 @@
+#include <iostream>
+#include <math.h>
+#include <bitset>
+using namespace std;
+
+int main()
+{
+	//bitset <32> b[2] = { 0x000073af, 0x00000000 };
+	bitset <32> b[2];
+	//bitset <32> a[2] = { 0xebf2831f, 0xb0c152f9};
+	bitset <32> a[2] = { 0xb0c152f9, 0xebf2831f };
+	bitset <32> l;
+	l = 0x1;
+	int size = 32;
+	for (int i = 0; i <= size - 1; i++)
+	{
+		for (int j = 0; j <= size - 1; j++)
+		{
+			b[(i + j) / 32] ^= ((a[i / 32] >> (i % 32)) & (a[j / 32 + size / 32] >> (j % 32)) & l) << ((i + j) % 32);
+			//cout << hex << b[0] << ' ';
+			//cout << hex << b[1] << endl;
+		}
+		//cout << endl;
+	}
+	//cout << endl;
+	cout << hex << a[0] << endl;
+	cout << hex << a[1]<<endl;
+	cout << endl;
+	cout << hex << b[0] << endl;
+	cout << hex << b[1] << endl;
+	cout << endl;
+
+	bitset <32> mul=0x0;
+	bitset <32> btest[2] = { b[0], b[1] };
+	bitset <32> mul1=0x0;
+	bitset <32> btest1[2] = { b[0], b[1] };
+
+	for (int i = 0; i < size-1; i++)
+	{
+		if (b[1][i+1] == 0)
+		{
+			mul[i] = 0;
+			btest[1][i+1] = 0;
+			mul1[i] = 1;
+			btest1[1][i+1] = 1;
+		}
+		else
+		{
+			mul[i] = 0;
+			btest[1][i+1] = 1;
+			mul1[i] = 1;
+			btest1[1][i+1] = 0;
+		}
+
+		for (int j = 0; j <= i; j++)
+		{
+			if (b[0][j] == 0)
+			{
+				mul[size-1-j] = 0;
+				btest[0][j] = 0;
+				mul1[size-1-j] = 1;
+				btest1[0][j] = 1;
+			}
+			else
+			{
+				mul[size-1-j] = 0;
+				btest[0][j] = 1;
+				mul1[size-1-j] = 1;
+				btest1[0][j] = 0;
+			}
+		}
+	}
+	cout << hex << mul << endl;
+	cout << hex << mul1 << endl;
+	cout << hex << btest[1] << endl;
+	cout << hex << btest1[1] << endl;
+	system("pause");		
+}
